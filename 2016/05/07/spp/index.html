@@ -1,0 +1,612 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="object detection,SPP," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="总结SPP的优点:解决了同一个图片上的多个候选bbox抽取特征，不需要重复经过cnn的过程，而只需要完整图片对应的feature map上找到这些候选bbox对应的位置，然后用spp就可以编码成固定长度的特征。SPP的缺点:由于用了SPP，所以在训练的时候，前面的卷积层都固定不变，只fine tune后面的全连接层。这也是SPP的一大弊端。后面的fast-rcnn针对这一缺点进行改进。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SPP论文笔记">
+<meta property="og:url" content="http://yoursite.com/2016/05/07/spp/index.html">
+<meta property="og:site_name" content="wow~">
+<meta property="og:description" content="总结SPP的优点:解决了同一个图片上的多个候选bbox抽取特征，不需要重复经过cnn的过程，而只需要完整图片对应的feature map上找到这些候选bbox对应的位置，然后用spp就可以编码成固定长度的特征。SPP的缺点:由于用了SPP，所以在训练的时候，前面的卷积层都固定不变，只fine tune后面的全连接层。这也是SPP的一大弊端。后面的fast-rcnn针对这一缺点进行改进。">
+<meta property="og:updated_time" content="2016-05-11T14:25:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SPP论文笔记">
+<meta name="twitter:description" content="总结SPP的优点:解决了同一个图片上的多个候选bbox抽取特征，不需要重复经过cnn的过程，而只需要完整图片对应的feature map上找到这些候选bbox对应的位置，然后用spp就可以编码成固定长度的特征。SPP的缺点:由于用了SPP，所以在训练的时候，前面的卷积层都固定不变，只fine tune后面的全连接层。这也是SPP的一大弊端。后面的fast-rcnn针对这一缺点进行改进。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> SPP论文笔记 | wow~ </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?0e52df2c8a8fe99e47015ef60796bd11";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wow~</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">amazing</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                SPP论文笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-07T19:40:19+08:00" content="2016-05-07">
+              2016-05-07
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/07/spp/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/07/spp/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>SPP的优点:<br>解决了同一个图片上的多个候选bbox抽取特征，不需要重复经过cnn的过程，而只需要完整图片对应的feature map上找到这些候选bbox对应的位置，然后用spp就可以编码成固定长度的特征。<br>SPP的缺点:<br>由于用了SPP，所以在训练的时候，前面的卷积层都固定不变，只fine tune后面的全连接层。这也是SPP的一大弊端。后面的fast-rcnn针对这一缺点进行改进。</p>
+<a id="more"></a>
+<h2 id="思路和解决办法"><a href="#思路和解决办法" class="headerlink" title="思路和解决办法"></a>思路和解决办法</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>R-CNN非常耗时。因为CNN在训练的时候要求输入大小是固定的。所以，我们要对每个候选bbox resize成指定大小后才能输入到CNN。需要fixed size的原因是，最后一个卷积层(记作conv5)后面紧跟的那个全连接层(fc6)要求的输入是指定的。那么产生一个想法，整个CNN的输入大小可以任意，只要改变conv5后面的pooling办法，产生指定大小的输出给fc6即可。</p>
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>最后一个卷积层，和第一个fc层之间，引入SPP层。即，卷积层-&gt; SPP层-&gt;fc1。SPP层使得不同的卷积层输入，有相同大小的输出。</p>
+<p>对于一张图产生的~2k个candidate region，要进行~2k次resize，然后CNN抽特征的过程。<br>设最后一个卷积层conv5的输出是h*w*256<br>那么<br>h*w*256，<br>将每个activation (h*w*1)<br>将其当做一个大的1*1的块进行max pooling，得到1*1*256.<br>将其分成大2*2的块，进行max pooling，得到2*2*256.<br>将其分成3*3的块，进行max pooling，得到3*3*256.<br>最终得到指定大小的输出: (1*1+2*2+….) *256 = 256M.</p>
+<h2 id="如何训练SPP网络"><a href="#如何训练SPP网络" class="headerlink" title="如何训练SPP网络"></a>如何训练SPP网络</h2><p>先说如何训练一个固定输入的CNN网络。<br>基于的模型是ZF网络。<br>固定输入是224*224，那么在conv5后面的那个SPP层，其实就是由多个pooling层，并在一起。得到fc6的输入。</p>
+<blockquote>
+<p>[pool3x3], type=pool, pool=max, inputs=conv5, sizeX=5, stride=4<br>[pool2x2], type=pool, pool=max, inputs=conv5, sizeX=7, stride=6<br>[pool1x1], type=pool, pool=max, inputs=conv5, sizeX=13, stride=13<br>[fc6],     type=fc, outputs=4096, inputs=pool3x3  pool2x2 pool1x1</p>
+</blockquote>
+<p>假设现在已经有了224*224作为输入的网络。我们想有一个180*180作为输入的网络。<br>我们知道224*224的图片对应的conv5的输出是,13*13.180*180的图片对应的conv5的输出是,10*10.<br>只需要改变180*180的spp层的stride和window size，可以得到和224*224一样大小的spp输出。</p>
+<p>那么224*224和180*180的网络架构是一样的，除了spp的时候stride 和window size是不一样的。参数是共享的。<br>训练的时候，分别有两个网络。一个输入是224*224，一个输入是180*180。<br>第一轮，给一批224*224大小的图像。更新参数。然后将参数复制到180*180网络。<br>第二轮，给一批180*180大小的图像。更新参数。然后将参数复制到224*224网络。<br>如此循环。</p>
+<p>训练的时候这么麻烦，只是想要说明，SPP-net可以接受任意大小的输入。在测试的时候，我们可以直接输入任意size的图片。</p>
+<h2 id="如何做Detection"><a href="#如何做Detection" class="headerlink" title="如何做Detection"></a>如何做Detection</h2><p>训练:<br>对于pascal voc 2007的20个类别，训练20个SVM分类器。输入一张图片，设最后一个卷积层conv5的输出是h*w*256对于一个gt的box作为正类，找gt box在feature maps上的对应位置。找到h’*w’*256. 然后进行SPP，得到256M。找跟gt bbox 的IOU小于 30%的作为负类。训练出SVM。<br>测试:<br>SS产生~2k个candidate region，对每个region找到它在feature maps上的对应位置。找到h’*w’*256.然后进行SPP，得到256M。将256M的特征交给20个SVM，取得分最高的。然后进行NMS.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/object-detection/" rel="tag">#object detection</a>
+          
+            <a href="/tags/SPP/" rel="tag">#SPP</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/07/rcnn/" rel="next" title="R-CNN论文笔记">
+                <i class="fa fa-chevron-left"></i> R-CNN论文笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/11/entropy/" rel="prev" title="entropy">
+                entropy <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/07/spp/"
+           data-title="SPP论文笔记" data-url="http://yoursite.com/2016/05/07/spp/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="zhouw" />
+          <p class="site-author-name" itemprop="name">zhouw</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路和解决办法"><span class="nav-number">2.</span> <span class="nav-text">思路和解决办法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">2.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决办法"><span class="nav-number">2.2.</span> <span class="nav-text">解决办法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何训练SPP网络"><span class="nav-number">3.</span> <span class="nav-text">如何训练SPP网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何做Detection"><span class="nav-number">4.</span> <span class="nav-text">如何做Detection</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouw</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhouw"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

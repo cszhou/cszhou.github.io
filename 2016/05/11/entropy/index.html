@@ -1,0 +1,633 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="entropy,Machine Learning," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="提到熵一般有两种语境。一种是在热力学中，另外一种是在信息论中。本文主要是简要记录信息论中的那些熵。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="entropy">
+<meta property="og:url" content="http://yoursite.com/2016/05/11/entropy/index.html">
+<meta property="og:site_name" content="wow~">
+<meta property="og:description" content="提到熵一般有两种语境。一种是在热力学中，另外一种是在信息论中。本文主要是简要记录信息论中的那些熵。">
+<meta property="og:updated_time" content="2017-03-08T01:08:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="entropy">
+<meta name="twitter:description" content="提到熵一般有两种语境。一种是在热力学中，另外一种是在信息论中。本文主要是简要记录信息论中的那些熵。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> entropy | wow~ </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?0e52df2c8a8fe99e47015ef60796bd11";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wow~</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">amazing</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                entropy
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-11T22:31:36+08:00" content="2016-05-11">
+              2016-05-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/11/entropy/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/entropy/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+
+<p>提到熵一般有两种语境。一种是在热力学中，另外一种是在信息论中。本文主要是简要记录信息论中的那些熵。</p>
+<a id="more"></a>
+<h1 id="热力学中的熵"><a href="#热力学中的熵" class="headerlink" title="热力学中的熵"></a>热力学中的熵</h1><p>推荐一本书<a href="https://book.douban.com/subject/6749832/" target="_blank" rel="external">《复杂》</a>。第一次在南大图书馆偶然翻到这本书的时候，纯粹是因为书名。我只是想初略地回顾下复杂系统里面的那些经典的概念：自组织和涌现，又不想做太深入的了解。但是在简单看了内容简介以及翻看了几页后，发现这本书非常合我胃口。这本书给我的惊喜远超预期。最精彩的是，由于复杂系统是个跨学科的方向，所以书中以非常简要但不失趣味性的方式介绍了相关学科的一些脉络。值得一提的是，在&lt;信息&gt;一章中，介绍了如何从能量、功、熵这些概念，一步步理解“信息”。</p>
+<p>维基百科中对于热力学的熵有这样的介绍。</p>
+<blockquote>
+<p>随着时间的推移，热力学第二定律：孤立系统的熵状态永远只会增加，不会减少。因此，从这个角度看，熵的测量被看作是一种时钟。所以熵为我们指明时间的方向。</p>
+</blockquote>
+<h1 id="信息论中的熵"><a href="#信息论中的熵" class="headerlink" title="信息论中的熵"></a>信息论中的熵</h1><p>Shannon在《A Mathematical Theory of Communication》中提出了建立在概率统计模型上的信息度量。在这篇论文中，信息被定义为“用来消除不确定性的东西”。具体可以看互信息是如何消除不确定性。</p>
+<p>熵是衡量信息无序性(随机性)的一个指标。熵越大，则表示随机性越大。考虑两个极端情况：随机性最大的情况以及随机性最小的情况。</p>
+<p>1. 随机性最小的情况。设X是离散随机变量，有m个取值可能性\( s_1 \cdots s_m \)。设只有\(s_1 \)会出现。其他状态都不会出现。这种情况下。我们知道没有随机性。X肯定是取\(s_1 \)。<br>2. 随机性最大的情况。也就是所有状态有相同的可能性出现，都有1/m的可能性会出现。此时，熵也会达到最大。</p>
+<h2 id="熵"><a href="#熵" class="headerlink" title="熵"></a>熵</h2><p>离散条件下定义的熵，表示一个符号需要的期望长度。也就是期望意义下，将信息经过huffman编码传递给接收方，每个状态需要用多少个bit来传递。</p>
+<p>$$ H(X) = -\sum_{x} p(x) \log_2 p(x) $$</p>
+<p>参考维基百科的例子。<br>例子1：理想硬币。正面和反面的概率是都是1/2。根据Huffman编码，我们可以对正面编码为0，反面编码为1。所以，期望意义下，表示每个状态需要用1个bit。<br>例子2： 一个随机变量X，取值有3种可能，a,b,c,概率分别是1/2, 1/4, 1/4，根据Huffman编码，可以对a编码为0, b编码为10,c编码为11。所以期望意义上每个状态需要的编码长度是 \( \frac{1}{2}*1 + \frac{1}{4}*2 +\frac{1}{4}*2  \)。其实这就是熵的定义，计算如下，<br>\( H(X)= \sum_{x} p(x) \log_2 \frac{1}{p(x)} = \frac{1}{2}*1 + \frac{1}{4}*2 +\frac{1}{4}*2 \)</p>
+<p>离散的定义下，熵是非负的。单位是比特(bit)。这个我们经常看到的单位，是由Shannon在论文中取的名字。<br>连续的定义下，熵的单位是纳特(nat)，熵可能是负值，可以是0，可以是正值。</p>
+<blockquote>
+<p>The choice of a logarithmic base corresponds to the choice of a unit for measuring information. If the base 2 is used the resulting units may be called binary digits, or more briefly bits, a word suggested by J. W. Tukey.【摘自A Mathematical Theory of Communication】</p>
+</blockquote>
+<p>应用：最大熵模型。<br>店铺出售3种食物A、B、C，单价分别是1元，2元，3元，已知平均消费是1.9元。问顾客购买这3种食物的概率p(A),p(B),p(C)。<br>因为我们对于这些分布没有更多的信息了，所以我们只能假设满足约束条件的分布都是等可能的，这就对应了最大熵。已知的信息是p(A)+p(B)+p(C)=1. 1*p(A)+2*p(B)+3*p(C)=1.9. 我们要最大化的就是\(  H(x) = -\sum_{x={A,B,C}} p(x) \log_2 p(x) \)。</p>
+<p>应用：决策树的划分选择<br>决策树中应该选择哪个属性进行划分的时候。一个评价指标是：信息增益。</p>
+<h2 id="联合熵和条件熵"><a href="#联合熵和条件熵" class="headerlink" title="联合熵和条件熵"></a>联合熵和条件熵</h2><p>联合熵具有对称性。<br>条件熵不具有对称性。<br>H(X,Y)=H(X)+H(Y|X)=H(Y)+H(X|Y)=H(Y,X)</p>
+<p>关于条件熵H(Y|X):<br>已知X的信息H(X)，需要用多少信息来确定X,Y的信息H(X,Y)。这里需要的信息就是H(Y|X)。</p>
+<h2 id="互信息"><a href="#互信息" class="headerlink" title="互信息"></a>互信息</h2><p>互信息是非负的。具有对称性。<br>I(X;Y)=H(X)-H(X|Y)=H(X)+H(Y)-H(X,Y)=H(Y)-H(Y|X)=I(Y;X)</p>
+<p>从I(X;Y)=H(X)-H(X|Y)可知，互信息表示分布X和Y之间共同的信息。也可以说成，当观察到Y之后，X的不确定性的减少量。<br>从I(X;Y)=H(X)+H(Y)-H(X,Y)可知,互信息表示联合分布p(X,Y)的信息量与边缘分布p(X)、p(Y)的信息量之和，的差值。</p>
+<p>当Y取值为X时，有I(X;X)=H(X)-H(X|X)。H(X|X)的含义是X已知时X的条件熵，可是x已知时它自己当然没有不确定性了。所以H(X∣X)=0。把它代入信息公式，得到I(X;X)=H(X)，我们可以看到，自信息=熵。也就是说X值已知时所带来的信息恰好等于原来的不确定性。这就是我们为什么有时候会把熵称作信息。</p>
+<p>应用：特征选择。<br>根据某个属性a与标记y的互信息来进行特征选择。</p>
+<h2 id="KL散度-相对熵"><a href="#KL散度-相对熵" class="headerlink" title="KL散度=相对熵"></a>KL散度=相对熵</h2><p>KL散度是非负的，不具有对称性。</p>
+<p>KL(p||q)表示用q来近似p需要的距离。所以互信息可以表示成I(X;Y)= KL(p(x,y)||p(x)p(y))</p>
+<p>设p是ground truth的分布，q是用来近似p的分布。在实际中，q是我们学习出来的一个分布。<br>那么有，KL(p||q)=CE(p,q)-H(p)，其中 CE(p,q)= -\sum_{x} p(x) \log_2 q(x)<br>在实际机器学习中，由于h(p)是gt的，所以最小化KL(p||q)等价于最小化CE(p,q)。</p>
+<h2 id="交叉熵"><a href="#交叉熵" class="headerlink" title="交叉熵"></a>交叉熵</h2><p>交叉熵不具有对称性。<br>CE(p,q) = KL(p||q)+h(p)</p>
+<p>应用：在多分类问题中，作为loss函数。<br>我们最常见的二分类的Logistic Regression模型中，用到的损失函数就是交叉熵。将二分类的交叉熵泛化到多分类问题时，设总共有100个类别。对于每个样本\(x_i \)，我们都有 \(y_i\),这里\(y_i\)是100维向量，可以是One-Hot编码。还可以用其他方式编码。假设要预测人脸的年龄，设年龄的区间是[1,100]，那么对于每个人的年龄，我们知道拍照时这个人的年龄32岁,那么如果预测出来的结果是33，我们会觉得是一个非常合理的结果。所以我们可以假设真实的年龄是服从以32为均值的一个正态分布，可以得到100维向量。这就是当做ground truth的p分布，我们要学习的是q分布。那么学习目标函数的就是最小化CE(p,q)。</p>
+<h1 id="推荐阅读材料"><a href="#推荐阅读材料" class="headerlink" title="推荐阅读材料"></a>推荐阅读材料</h1><p>1. <a href="http://cs.nju.edu.cn/wujx/paper/IT.pdf" target="_blank" rel="external">Information Theory and Decision Tree</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/entropy/" rel="tag">#entropy</a>
+          
+            <a href="/tags/Machine-Learning/" rel="tag">#Machine Learning</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/07/spp/" rel="next" title="SPP论文笔记">
+                <i class="fa fa-chevron-left"></i> SPP论文笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/26/houseInBeijing/" rel="prev" title="帝都租房记">
+                帝都租房记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/11/entropy/"
+           data-title="entropy" data-url="http://yoursite.com/2016/05/11/entropy/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="zhouw" />
+          <p class="site-author-name" itemprop="name">zhouw</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#热力学中的熵"><span class="nav-number">1.</span> <span class="nav-text">热力学中的熵</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#信息论中的熵"><span class="nav-number">2.</span> <span class="nav-text">信息论中的熵</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#熵"><span class="nav-number">2.1.</span> <span class="nav-text">熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#联合熵和条件熵"><span class="nav-number">2.2.</span> <span class="nav-text">联合熵和条件熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#互信息"><span class="nav-number">2.3.</span> <span class="nav-text">互信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KL散度-相对熵"><span class="nav-number">2.4.</span> <span class="nav-text">KL散度=相对熵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#交叉熵"><span class="nav-number">2.5.</span> <span class="nav-text">交叉熵</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#推荐阅读材料"><span class="nav-number">3.</span> <span class="nav-text">推荐阅读材料</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouw</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhouw"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

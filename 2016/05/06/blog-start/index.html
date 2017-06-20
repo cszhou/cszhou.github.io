@@ -1,0 +1,621 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo,Github,七牛云,Godaddy," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="记录下搭建博客过程中用到的资源，以及如何创建新文章。
+博客搭建用到的资源1.在Godaddy购买域名。2.用Github Pages作为blog的存储空间。3.用DNSPod来修改域名解析。4.用Hexo作博客框架。不得不说，hexo的文档写的非常非常漂亮~ 选择NexT作博客主题。够用就好，以后再改配置。5.用七牛云来存储图片、pdf等资源。七牛云提供了方便的命令行上传功能，批量上传后，用七">
+<meta property="og:type" content="article">
+<meta property="og:title" content="博客搭建过程记录">
+<meta property="og:url" content="http://yoursite.com/2016/05/06/blog-start/index.html">
+<meta property="og:site_name" content="wow~">
+<meta property="og:description" content="记录下搭建博客过程中用到的资源，以及如何创建新文章。
+博客搭建用到的资源1.在Godaddy购买域名。2.用Github Pages作为blog的存储空间。3.用DNSPod来修改域名解析。4.用Hexo作博客框架。不得不说，hexo的文档写的非常非常漂亮~ 选择NexT作博客主题。够用就好，以后再改配置。5.用七牛云来存储图片、pdf等资源。七牛云提供了方便的命令行上传功能，批量上传后，用七">
+<meta property="og:updated_time" content="2016-05-07T01:36:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="博客搭建过程记录">
+<meta name="twitter:description" content="记录下搭建博客过程中用到的资源，以及如何创建新文章。
+博客搭建用到的资源1.在Godaddy购买域名。2.用Github Pages作为blog的存储空间。3.用DNSPod来修改域名解析。4.用Hexo作博客框架。不得不说，hexo的文档写的非常非常漂亮~ 选择NexT作博客主题。够用就好，以后再改配置。5.用七牛云来存储图片、pdf等资源。七牛云提供了方便的命令行上传功能，批量上传后，用七">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 博客搭建过程记录 | wow~ </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?0e52df2c8a8fe99e47015ef60796bd11";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wow~</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">amazing</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                博客搭建过程记录
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-06T20:46:24+08:00" content="2016-05-06">
+              2016-05-06
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/06/blog-start/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/06/blog-start/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
+
+<p>记录下搭建博客过程中用到的资源，以及如何创建新文章。</p>
+<h1 id="博客搭建用到的资源"><a href="#博客搭建用到的资源" class="headerlink" title="博客搭建用到的资源"></a>博客搭建用到的资源</h1><p>1.在<a href="https://sg.godaddy.com/" target="_blank" rel="external">Godaddy</a>购买域名。<br>2.用<a href="https://pages.github.com/" target="_blank" rel="external">Github Pages</a>作为blog的存储空间。<br>3.用<a href="https://www.dnspod.com/" target="_blank" rel="external">DNSPod</a>来修改域名解析。<br>4.用<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">Hexo</a>作博客框架。不得不说，hexo的文档写的非常非常漂亮~ 选择<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">NexT</a>作博客主题。够用就好，以后再改配置。<br>5.用<a href="http://www.qiniu.com/" target="_blank" rel="external">七牛云</a>来存储图片、pdf等资源。七牛云提供了方便的命令行上传功能，批量上传后，用七牛云提供的外链来引用资源。<br>6.评论系统用<a href="http://duoshuo.com/" target="_blank" rel="external">多说</a>。</p>
+<a id="more"></a>
+<p>详细一点的过程：</p>
+<h1 id="1-安装Hexo"><a href="#1-安装Hexo" class="headerlink" title="1.安装Hexo"></a>1.安装Hexo</h1><p>官方文档已经很棒了。建议这部分看官方文档。</p>
+<p>下面是我的操作过程。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装node.js，node.js自带npm。</span></span><br><span class="line">$ brew install node </span><br><span class="line"><span class="comment">#检测是否成功安装node</span></span><br><span class="line">$ node -v </span><br><span class="line"><span class="comment">#通过npm安装hexo</span></span><br><span class="line">$ npm install hexo -g  <span class="comment">#-g表示全局安装</span></span><br><span class="line"><span class="comment">#检测是否成功安装Hexo</span></span><br><span class="line">$ hexo -v</span><br><span class="line"></span><br><span class="line"><span class="comment">#开始建站 &lt;folder&gt;是blog在本地的路径。</span></span><br><span class="line">$ hexo init &lt;folder&gt; </span><br><span class="line">$ <span class="built_in">cd</span> &lt;folder&gt;</span><br><span class="line">$ npm install</span><br><span class="line"></span><br><span class="line"><span class="comment">#安装主题</span></span><br><span class="line">$ <span class="built_in">cd</span> your-hexo-site</span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
+<h1 id="2-修改Hexo的-config-yml文件。"><a href="#2-修改Hexo的-config-yml文件。" class="headerlink" title="2.修改Hexo的_config.yml文件。"></a>2.修改Hexo的_config.yml文件。</h1><p>我做的主要改动是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#select theme</span><br><span class="line">theme: next</span><br><span class="line"></span><br><span class="line"># Deployment</span><br><span class="line">## Docs: https://hexo.io/docs/deployment.html</span><br><span class="line">deploy:</span><br><span class="line">	type: git</span><br><span class="line">	repository: https://github.com/xxx/xxx.github.io.git</span><br><span class="line"> 	branch: master</span><br><span class="line"></span><br><span class="line">#select comment plugin</span><br><span class="line">duoshuo_shortname: xxx</span><br></pre></td></tr></table></figure></p>
+<h1 id="3-使用Hexo发布文章"><a href="#3-使用Hexo发布文章" class="headerlink" title="3. 使用Hexo发布文章"></a>3. 使用Hexo发布文章</h1><p>接下来就可以开心的写文章和发布文章了<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#该命令会新建立一个md文件在source/_posts下面。</span></span><br><span class="line">$ hexo n <span class="string">'new_blog_name'</span></span><br><span class="line"><span class="comment">#blog写作</span></span><br><span class="line">$ vim <span class="built_in">source</span>/_posts/new_blog_name.md</span><br><span class="line"><span class="comment">#启动服务器。默认情况下，访问网址为http://localhost:4000/。</span></span><br><span class="line">$ hexo s </span><br><span class="line"><span class="comment">#使用 Hexo生成blog需要的静态文件</span></span><br><span class="line">$ hexo g</span><br><span class="line"><span class="comment">#将内容提交到github上。然后就可以通过xxx.github.io来访问网站</span></span><br><span class="line">$ hexo d</span><br></pre></td></tr></table></figure></p>
+<h1 id="4-Markdown文件的编写的几个小知识"><a href="#4-Markdown文件的编写的几个小知识" class="headerlink" title="4.Markdown文件的编写的几个小知识"></a>4.Markdown文件的编写的几个小知识</h1><h2 id="如何设置「阅读全文」？"><a href="#如何设置「阅读全文」？" class="headerlink" title="如何设置「阅读全文」？"></a>如何设置「阅读全文」？</h2><p>在首页显示一篇文章的部分内容，并提供一个链接跳转到全文页面。<br>做法：<br>在文章中使用 <!-- more --> 手动进行截断</p>
+<h2 id="公式渲染"><a href="#公式渲染" class="headerlink" title="公式渲染"></a>公式渲染</h2><p>在文章中加上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>行间公式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$$x=\frac&#123;-b\pm\sqrt&#123;b^2-4ac&#125;&#125;&#123;2a&#125;$$</span><br></pre></td></tr></table></figure></p>
+<p>行内公式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\\(x=\frac&#123;-b\pm\sqrt&#123;b^2-4ac&#125;&#125;&#123;2a&#125;\\)</span><br></pre></td></tr></table></figure></p>
+<h2 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a>插入图片</h2><p>引用本地图片：在source目录下新建image文件存放图片<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!\[abc](/image/smile.jpg)</span><br></pre></td></tr></table></figure></p>
+<p>用外链：用七牛云等提供的外链<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\[abc](www.xxx.png)</span><br></pre></td></tr></table></figure></p>
+<h2 id="插入代码"><a href="#插入代码" class="headerlink" title="插入代码"></a>插入代码</h2><p>```cpp<br>int main(){<br>int a = 3;<br>return 0;<br>}<br>```</p>
+<h1 id="5-Godaddy域名注册"><a href="#5-Godaddy域名注册" class="headerlink" title="5.Godaddy域名注册"></a>5.Godaddy域名注册</h1><p>Godaddy支持支付宝，所以过程很简单。Godaddy的优惠码很多，如果没找到的话，域名选好放在购物车后，过一两天Godaddy就会往注册邮箱发优惠码了。<br>注册域名后，<a href="https://support.dnspod.cn/Kb/showarticle/tsid/42/" target="_blank" rel="external">改用dnspod解析域名</a>。<br>在Godaddy账户管理中，选择注册的域名，然后Manage DNS -&gt; Name Servers选Custom，并增加两条记录，F1G1NS1.DNSPOD.NET和F1G1NS2.DNSPOD.NET<br>去Dnspod，域名解析栏目下，添加域名，可以看到已有两条NS记录类型。<br>增加一条A记录，让域名指向你的xxx.github.io网站对应的ip（可以ping得到）。<br>增加一条CNAME记录，让域名指向xxx.github.io</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hexo/" rel="tag">#Hexo</a>
+          
+            <a href="/tags/Github/" rel="tag">#Github</a>
+          
+            <a href="/tags/七牛云/" rel="tag">#七牛云</a>
+          
+            <a href="/tags/Godaddy/" rel="tag">#Godaddy</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/07/Object_Detection/" rel="prev" title="Object Detection 系列论文笔记">
+                Object Detection 系列论文笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/06/blog-start/"
+           data-title="博客搭建过程记录" data-url="http://yoursite.com/2016/05/06/blog-start/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="zhouw" />
+          <p class="site-author-name" itemprop="name">zhouw</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#博客搭建用到的资源"><span class="nav-number">1.</span> <span class="nav-text">博客搭建用到的资源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-安装Hexo"><span class="nav-number">2.</span> <span class="nav-text">1.安装Hexo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-修改Hexo的-config-yml文件。"><span class="nav-number">3.</span> <span class="nav-text">2.修改Hexo的_config.yml文件。</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-使用Hexo发布文章"><span class="nav-number">4.</span> <span class="nav-text">3. 使用Hexo发布文章</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Markdown文件的编写的几个小知识"><span class="nav-number">5.</span> <span class="nav-text">4.Markdown文件的编写的几个小知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#如何设置「阅读全文」？"><span class="nav-number">5.1.</span> <span class="nav-text">如何设置「阅读全文」？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#公式渲染"><span class="nav-number">5.2.</span> <span class="nav-text">公式渲染</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入图片"><span class="nav-number">5.3.</span> <span class="nav-text">插入图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入代码"><span class="nav-number">5.4.</span> <span class="nav-text">插入代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Godaddy域名注册"><span class="nav-number">6.</span> <span class="nav-text">5.Godaddy域名注册</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouw</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhouw"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,621 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="OverFeat,object detection," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="总结multi scale + sliding window同时学习分类、定位、检测3个任务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OverFeat论文笔记">
+<meta property="og:url" content="http://yoursite.com/2016/05/07/overfeat/index.html">
+<meta property="og:site_name" content="wow~">
+<meta property="og:description" content="总结multi scale + sliding window同时学习分类、定位、检测3个任务。">
+<meta property="og:updated_time" content="2016-05-11T14:17:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OverFeat论文笔记">
+<meta name="twitter:description" content="总结multi scale + sliding window同时学习分类、定位、检测3个任务。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> OverFeat论文笔记 | wow~ </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?0e52df2c8a8fe99e47015ef60796bd11";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">wow~</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">amazing</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                OverFeat论文笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-07T19:39:50+08:00" content="2016-05-07">
+              2016-05-07
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/07/overfeat/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/07/overfeat/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>multi scale + sliding window同时学习分类、定位、检测3个任务。</p>
+<a id="more"></a>
+<h1 id="OverFeat"><a href="#OverFeat" class="headerlink" title="OverFeat"></a>OverFeat</h1><h2 id="如何训练CNN网络"><a href="#如何训练CNN网络" class="headerlink" title="如何训练CNN网络"></a>如何训练CNN网络</h2><p>网络结构基于AlexNet。<br>看附录中的accurate  model，而不看正文中的fast model。得到的信息是，网络的输入spatial input size是221*221.<br>最后一个卷积层的输出是15*15*1024，通过一个3*3的pooling层，得到5*5*1024的输出，作为fc层的输入。最后softmax层得到的预测score是1*1*1000。把这个1000记作C。<br>训练:将图片最短边resize成256，抽取5个大小为221*221的Random crops。进行训练。</p>
+<h3 id="1-分类任务"><a href="#1-分类任务" class="headerlink" title="(1)分类任务"></a>(1)分类任务</h3><p>网络结构基于ALexNet。<br>输入的每张图片，产生6个不同scale的图片。看论文的表5。<br>Scale 1: 输入大小245*245， 最后一个卷积层的输出是17*17,经过pooling后是5*5,但是这篇文章提出一个有3个offset的pooling，可以在原来pooling结果上每个维度扩大3倍【值得一提的是，这个策略对最后的结果提升并不大。】。所以得到(5*5)*(3*3)的输出。进一步得到(1*1)*(3*3)*C=3*3*C的预测结果。<br>….<br>Scale 6: 输入大小461*569， 最后一个卷积层的输出是35*44,经过pooling后是11*14。如果用的是3个offset的pooling，在原来pooling结果上每个维度扩大3倍。所以得到(11*14)*(3*3)的输出。进一步得到(7*10)*(3*3)*C=21*30*C的预测结果。<br>对于每个Scale还要flip后进行输入。所以我们有6*2个结果。</p>
+<blockquote>
+<p>Scale 1: 3*3*C<br>…<br>Scale 6: 21*30*C<br>Scale 1 with flip: 3*3*C<br>…<br>Scale 6 with flip: 21*30*C</p>
+</blockquote>
+<p>对于每个结果，取每个class的最大。</p>
+<blockquote>
+<p>得到:<br>Scale 1: 1*1*C<br>…<br>Scale 6: 1*1*C<br>Scale 1 with flip: 1*1*C<br>…<br>Scale 6 with flip: 1*1*C</p>
+</blockquote>
+<p>然后对上述结果取平均，得到</p>
+<blockquote>
+<p>1*1*C</p>
+</blockquote>
+<p>再取top 1，或者top 5。到此，分类任务完成。<br>值得一提的是，数据增强(Data Augmentation)的各种形式:</p>
+<blockquote>
+<p>1.将图片resize成各种scale；<br>2.对图片进行翻转(flip);<br>3.对图片进行random crop或者其他形式的crop;<br>…<br>以及上述各种方法的组合</p>
+</blockquote>
+<h3 id="2-localization"><a href="#2-localization" class="headerlink" title="(2) localization"></a>(2) localization</h3><p>现在已经有了分类网络。<br>再学习bbox regression network。<br>输入:layer 5的pooling后的特征，也就是说固定住这几层。以accurate model举例，就是5*5*1024。后面接3个全连接层，隐藏层的结点个数分别是，4096，1024，4。这个4就表示要学习的4个坐标。用的loss是l2 loss。<br>对于1k个不同类别，学习不同的regression network。</p>
+<h3 id="loc和det的流程"><a href="#loc和det的流程" class="headerlink" title="loc和det的流程"></a>loc和det的流程</h3><p>loc和det的流程都是见Fig6。<br>过程是:<br>对于每个scale ，通过滑动窗口的形式，产生大小跟accurate model输入大小一样大的的bbox，对于每个bbox，通过分类网络产生score。<br>将bbox，输入到regression network，可以得到校正后的bbox。<br>对所有scale，所有bbox，进行merge and accumulated，这个方法看上去比NMS不靠谱多了，所以忽略。。<br>注意的一点事，这里是先通过regression network得到bbox，再融合bbox，这样做计算量比较大，其他论文是得到bbox之后，先根据bbox score删掉一部分候选bbox, 再NMS，最后进行regression network校正。</p>
+<h3 id="3-detection"><a href="#3-detection" class="headerlink" title="(3) detection"></a>(3) detection</h3><p>跟localization的唯一区别是，detection要多学习一个背景的知识。<br>思路是这样子的。首先要找到负类，也就是背景的类。可以选择跟gt bbox的IoU少于阈值的bbox作为负类。然后进行CNN的训练，训练的最后一层的类别从1000到1000+1。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OverFeat/" rel="tag">#OverFeat</a>
+          
+            <a href="/tags/object-detection/" rel="tag">#object detection</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/07/Object_Detection/" rel="next" title="Object Detection 系列论文笔记">
+                <i class="fa fa-chevron-left"></i> Object Detection 系列论文笔记
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/07/rcnn/" rel="prev" title="R-CNN论文笔记">
+                R-CNN论文笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/07/overfeat/"
+           data-title="OverFeat论文笔记" data-url="http://yoursite.com/2016/05/07/overfeat/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="zhouw" />
+          <p class="site-author-name" itemprop="name">zhouw</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OverFeat"><span class="nav-number"></span> <span class="nav-text">OverFeat</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#如何训练CNN网络"><span class="nav-number">1.</span> <span class="nav-text">如何训练CNN网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-分类任务"><span class="nav-number">1.1.</span> <span class="nav-text">(1)分类任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-localization"><span class="nav-number">1.2.</span> <span class="nav-text">(2) localization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loc和det的流程"><span class="nav-number">1.3.</span> <span class="nav-text">loc和det的流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-detection"><span class="nav-number">1.4.</span> <span class="nav-text">(3) detection</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zhouw</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.0.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zhouw"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
